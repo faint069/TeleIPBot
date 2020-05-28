@@ -50,7 +50,7 @@ logging.basicConfig(filename="log.log",level=logging.INFO,
 
 scheduler = BackgroundScheduler()
 scheduler.start()
-scheduler.add_job(ip_check_job, "interval", seconds=5)
+scheduler.add_job(ip_check_job, "interval", minutes=15)
 
 
 token_file = open("personal_data/token", 'r')
