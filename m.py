@@ -4,7 +4,7 @@ import json
 import logging
 from apscheduler.schedulers.background import BackgroundScheduler
 
-def getip():
+def get_ip():
 	try:
 		r = requests.post("http://ip-api.com/json/?fields=status,message,query")
 	except:
@@ -27,9 +27,9 @@ def getip():
 
 
 def ip_check_job():
-	current_ip = getip()
+	current_ip = get_ip()
 
-	ip_store_file = open('ip_store.json','r')
+	ip_store_file = open("ip_store.json", "r")
 	ip_store = json.load(ip_store_file)
 	ip_store_file.close()
 
@@ -39,7 +39,7 @@ def ip_check_job():
 		bot.send_message(subscriber_id, "IP адрес изменился. Текущий адресс: " + current_ip)
 
 		ip_store.append(current_ip)
-		ip_store_file = open('ip_store.json', 'w')
+		ip_store_file = open("ip_store.json", "w")
 		json.dump(ip_store, ip_store_file)
 		ip_store_file.close()
 
@@ -53,12 +53,12 @@ scheduler.start()
 scheduler.add_job(ip_check_job, "interval", minutes=15)
 
 
-token_file = open("personal_data/token", 'r')
+token_file = open("personal_data/token", "r")
 token = token_file.read()
 bot = telebot.TeleBot(token)
 token_file.close()
 
-subscriber_id_file = open("personal_data/subscriber_id", 'r')
+subscriber_id_file = open("personal_data/subscriber_id", "r")
 subscriber_id = int(subscriber_id_file.read())
 subscriber_id_file.close()
 
@@ -68,7 +68,7 @@ def echo_all(message):
 	logging.log(logging.INFO,"Получено сообщение от "+ message.from_user.first_name + " " + message.from_user.last_name + " ID: " + str(message.from_user.id))
 	logging.log(logging.INFO,"Текст: " + message.text)
 	if message.from_user.id == subscriber_id:
-		bot.send_message(message.chat.id, getip())
+		bot.send_message(message.chat.id, get_ip())
 	else:
 		bot.send_message(message.chat.id,
 					 "You are not authorized to use this bot, sorry.\nYou can configure Your own IP reporter using github repository https://github.com/faint069/TeleIPBot")
