@@ -7,15 +7,21 @@ def getip():
 	try:
 		r = requests.post("http://ip-api.com/json/?fields=status,message,query")
 	except:
-		return "Could not retrieve JSON data"
+		message = "Could not retrieve JSON data"
+		logging.log(logging.ERROR, message)
+		return message
 	try:
 		ip_info = json.loads(r.text)
 	except:
-		return "Bad JSON format" + r.text
+		message = "Bad JSON format" + r.text
+		logging.log(logging.ERROR, message)
+		return message
 	if ip_info["status"] == "success":
 		ip = ip_info["query"]
+		logging.log(logging.INFO, "Получил IP: " + ip)
 	else:
 		ip = "ip-api error: " + ip_info["message"]
+		logging.log(logging.ERROR, ip)
 	return ip
 
 logging.basicConfig(filename="log.log",level=logging.INFO,
@@ -32,9 +38,11 @@ subscriber_id_file.close()
 
 @bot.message_handler(func=lambda m: True)
 def echo_all(message):
-	logging.log(logging.INFO,"Получено сообщение от "+ message.from_user.first_name + " " + message.from_user.last_name)
+	logging.log(logging.INFO,"Получено сообщение от "+ message.from_user.first_name + " " + message.from_user.last_name + " ID: " + str(message.from_user.id))
 	logging.log(logging.INFO,"Текст: " + message.text)
 	if message.from_user.id == subscriber_id:
-		bot.reply_to(message, getip())
-
+		bot.send_message(message.chat.id, getip())
+	else:
+		bot.send_message(message.chat.id,
+					 "You are not authorized to use this bot, sorry.\nYou can configure Your own IP reporter using github repository https://github.com/faint069/TeleIPBot")
 bot.polling(none_stop=True, interval=1)
