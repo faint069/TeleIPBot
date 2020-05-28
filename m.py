@@ -21,12 +21,12 @@ def getip():
 logging.basicConfig(filename="log.log",level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-token_file = open('token')
+token_file = open('personal_data/token')
 token = token_file.read()
 bot = telebot.TeleBot(token)
 token_file.close()
 
-subscriber_id_file = open('subscriber_id')
+subscriber_id_file = open('personal_data/subscriber_id')
 subscriber_id = int(subscriber_id_file.read())
 subscriber_id_file.close()
 
