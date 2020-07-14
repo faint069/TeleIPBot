@@ -1,8 +1,11 @@
+# coding=utf-8
 import telebot
 import requests
 import json
 import logging
 from apscheduler.schedulers.background import BackgroundScheduler
+from personal_data import TOKEN
+from personal_data import SUBSCRIBER_ID
 
 def get_ip():
 	try:
@@ -52,22 +55,14 @@ scheduler = BackgroundScheduler()
 scheduler.start()
 scheduler.add_job(ip_check_job, "interval", minutes=15)
 
-
-token_file = open("personal_data/token", "r")
-token = token_file.read()
-bot = telebot.TeleBot(token)
-token_file.close()
-
-subscriber_id_file = open("personal_data/subscriber_id", "r")
-subscriber_id = int(subscriber_id_file.read())
-subscriber_id_file.close()
+bot = telebot.TeleBot(TOKEN)
 
 
 @bot.message_handler(func=lambda m: True)
 def echo_all(message):
 	logging.log(logging.INFO,"Получено сообщение от "+ message.from_user.first_name + " " + message.from_user.last_name + " ID: " + str(message.from_user.id))
 	logging.log(logging.INFO,"Текст: " + message.text)
-	if message.from_user.id == subscriber_id:
+	if message.from_user.id == SUBSCRIBER_ID:
 		bot.send_message(message.chat.id, get_ip())
 	else:
 		bot.send_message(message.chat.id,

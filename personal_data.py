@@ -1,0 +1,2 @@
+SUBSCRIBER_ID = ""
+TOKEN = ""
