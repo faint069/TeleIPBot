@@ -5,7 +5,7 @@
       <paths name="fff@192.168.0.2:22">
         <serverdata>
           <mappings>
-            <mapping deploy="/TeleIP" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/Pycharm_projects/TeleIP" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
